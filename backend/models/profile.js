@@ -1,30 +1,84 @@
-'use strict';
-const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Profile extends Model {
-    static associate(models) {
-      Profile.belongsTo(models.User, { foreignKey: 'userId', as: 'user' });
+  const Profile = sequelize.define('Profile', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+      primaryKey: true
+    },
+    userId: {
+      type: DataTypes.UUID,  // Change this to UUID
+      allowNull: false,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    dateOfBirth: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
+    idNumber: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    phoneNumber: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    location: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    profilePhoto: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    idPhoto: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    nickname: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    aboutMyself: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    customerNeeds: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    latitude: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    longitude: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
     }
-  }
-  Profile.init({
-    userId: DataTypes.UUID,
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    dateOfBirth: DataTypes.DATE,
-    idNumber: DataTypes.STRING,
-    phoneNumber: DataTypes.STRING,
-    location: DataTypes.STRING,
-    profilePhoto: DataTypes.STRING,
-    idPhoto: DataTypes.STRING,
-    nickname: DataTypes.STRING, // New field
-    status: DataTypes.TEXT, // New field
-    aboutMyself: DataTypes.TEXT, // New field
-    latitude: DataTypes.FLOAT, // New field
-    longitude: DataTypes.FLOAT, // New field
-    customerNeeds: DataTypes.TEXT // New field
-  }, {
-    sequelize,
-    modelName: 'Profile',
   });
+
   return Profile;
 };

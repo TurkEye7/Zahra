@@ -1,22 +1,48 @@
-'use strict';
-const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class SecondaryContact extends Model {
-    static associate(models) {
-      // A SecondaryContact belongs to a User
-      SecondaryContact.belongsTo(models.User, { foreignKey: 'userId', as: 'user' });
+  const SecondaryContact = sequelize.define('SecondaryContact', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+      primaryKey: true
+    },
+    userId: {
+      type: DataTypes.UUID,  // Change this to UUID
+      allowNull: false,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    phoneNumber: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    relationship: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
     }
-  }
-  SecondaryContact.init({
-    userId: DataTypes.UUID,
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    phoneNumber: DataTypes.STRING,
-    email: DataTypes.STRING,
-    relationship: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'SecondaryContact',
   });
+
   return SecondaryContact;
 };

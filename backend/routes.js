@@ -1,14 +1,28 @@
 const express = require('express');
+const multer = require('multer');
 const { User, Profile, SecondaryContact, Rating, Friend, Chat } = require('./models');
 const router = express.Router();
 
+// Set up multer for handling file uploads
+const upload = multer({ dest: 'uploads/' });
+
 // Basic Registration (First Tier)
-router.post('/register/basic', async (req, res) => {
+router.post('/register/basic', upload.fields([{ name: 'profilePhoto' }, { name: 'idPhoto' }]), async (req, res) => {
   try {
-    const { email, password, role, firstName, lastName, dateOfBirth, idNumber, phoneNumber, location, profilePhoto, idPhoto } = req.body;
+    const { email, password, role, firstName, lastName, dateOfBirth, idNumber, phoneNumber, location } = req.body;
 
     const user = await User.create({ email, password, role });
-    const profile = await Profile.create({ userId: user.id, firstName, lastName, dateOfBirth, idNumber, phoneNumber, location, profilePhoto, idPhoto });
+    const profile = await Profile.create({ 
+      userId: user.id, 
+      firstName, 
+      lastName, 
+      dateOfBirth, 
+      idNumber, 
+      phoneNumber, 
+      location, 
+      profilePhoto: req.files['profilePhoto'] ? req.files['profilePhoto'][0].path : null,
+      idPhoto: req.files['idPhoto'] ? req.files['idPhoto'][0].path : null
+    });
 
     res.status(201).json({ user, profile });
   } catch (error) {
